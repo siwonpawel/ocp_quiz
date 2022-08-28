@@ -1,0 +1,48 @@
+{{ define "body"}}
+
+<main class="flex-shrink-0">
+    <div class="container my-2">
+        <nav aria-label="breadcrumb" class="my-3">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item active" aria-current="page">Question type</li>
+              <li class="breadcrumb-item active" aria-current="page">{{ if eq .Type "SCQ" }}single{{ else }}multiple{{ end }} choice</li>
+            </ol>
+        </nav>
+
+        <div class="bg-light my-2 p-2 rounded">
+            <div class="user-select-none col-sm-12 col-md-10 mx-auto">
+                {{ .ProblemStatement }}
+            </div>
+        </div>
+        {{ if .Answers }}
+            <div class="row my-2">
+                <p class="my-0">Answers:</p>
+            </div>
+            <div class="my-2">
+                <ul class="list-group">
+                    {{ range $i, $a := .Answers }}
+                        <li onclick="activate(this)" id="answer-{{ $i }}" class="user-select-none answer list-group-item {{ if $a.Correct}}correct{{ else }}incorrect{{ end }}">{{ $a.Statement }}</li>
+                    {{ end }}
+                </ul>
+            </div>
+    
+            <div class="row py-2">
+                <div class="col-12 text-center">
+                    <div id="score-alert" class="alert alert-primary mb-0" role="alert">Verify answers to check the resuly</div>
+                </div>
+            </div>
+    
+            <div class="row justify-content-end">
+                <div class="col col-xs-12 col-md-6 col-lg-4 py-2 ">
+                    <div class="btn-group d-flex" role="group">
+                        <button type="button" id="btn-verify" class="btn btn-warning shadow-none" onclick="verify()">Verify answers</button>
+                        <a href="/question/{{ .NextQuestionId }}" class="btn btn-primary" role="button" aria-pressed="true">Next question</a>
+                    </div>
+                </div>
+            </div>
+
+        {{ end }}    
+    </div>
+</main>
+
+{{ end }}
