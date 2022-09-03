@@ -1,17 +1,23 @@
 package main
 
 import (
+	"embed"
 	"fmt"
 	"html/template"
 	"log"
 	"net/http"
 	"os"
-	"strings"
+
+	_ "embed"
 )
 
-const (
-	WEB_PORT = 5001
+//go:embed static/*
+var staticContent embed.FS
 
+//go:embed templates/*
+var content embed.FS
+
+const (
 	HOME_PAGE     = "homePage"
 	QUESTION_PAGE = "questionPage"
 )
@@ -32,16 +38,11 @@ func main() {
 	}
 }
 
+
+
 func loadTemplates() map[string]*template.Template {
 	return map[string]*template.Template{
-		HOME_PAGE:     template.Must(template.ParseFiles("templates/layout.html", "templates/header.html", "templates/mainPage.html", "templates/footer.html")),
-		QUESTION_PAGE: template.Must(template.ParseFiles("templates/layout.html", "templates/header.html", "templates/questionPage.html", "templates/footer.html")),
+		HOME_PAGE:     template.Must(template.ParseFS(content, "templates/layout.html", "templates/header.html", "templates/mainPage.html", "templates/footer.html")),
+		QUESTION_PAGE: template.Must(template.ParseFS(content, "templates/layout.html", "templates/header.html", "templates/questionPage.html", "templates/footer.html")),
 	}
-}
-
-func unescapeWhiteCharacters(value string) string {
-	value = strings.ReplaceAll(value, `\n`, "\n")
-	value = strings.ReplaceAll(value, `\t`, "\t")
-
-	return value
 }

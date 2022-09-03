@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/gorilla/mux"
 )
@@ -12,8 +13,8 @@ import (
 func handlers() *mux.Router {
 	mux := mux.NewRouter()
 
-	fs := http.FileServer(http.Dir("templates/public"))
-	mux.PathPrefix("/static/").Handler(http.StripPrefix("/static/", fs))
+	fs := http.FileServer(http.FS(staticContent))
+	mux.PathPrefix("/static/").Handler(fs)
 
 	mux.HandleFunc("/", mainPageHandler)
 	mux.HandleFunc("/question/{id}", questionPageHandler)
@@ -119,4 +120,11 @@ func mapAnswers(ans []Answer) []AnswerResponse {
 	}
 
 	return ansR
+}
+
+func unescapeWhiteCharacters(value string) string {
+	value = strings.ReplaceAll(value, `\n`, "\n")
+	value = strings.ReplaceAll(value, `\t`, "\t")
+
+	return value
 }
