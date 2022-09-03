@@ -1,5 +1,8 @@
-.rounded pre {
+pre {
     tab-size: 2;
+}
+
+.rounded {
     background: rgba(0, 0, 0, 0.05);
 }
 

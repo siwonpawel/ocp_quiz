@@ -64,9 +64,9 @@ function verify() {
 
     }
 
-    var verifyBtn = document.getElementById("btn-verify-col");
-    verifyBtn.className = verifyBtn.className + " disabled";
+    var verifyBtn = document.getElementById("verify-btns");
+    verifyBtn.className = verifyBtn.className + " d-none";
 
-    var nextQuestionBtn = document.getElementById("btn-next-question-col");
-    nextQuestionBtn.className = nextQuestionBtn.className.replaceAll("invisible");
+    var nextQuestionBtn = document.getElementById("next-question-btns");
+    nextQuestionBtn.className = nextQuestionBtn.className.replaceAll("d-none");
 }

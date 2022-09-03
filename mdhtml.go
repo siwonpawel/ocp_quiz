@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"fmt"
 	"io"
 	"regexp"
 
@@ -62,7 +63,7 @@ func processCodeBlock(w io.Writer, cb *ast.CodeBlock) (ast.WalkStatus, bool) {
 	if string(info) != "java" {
 		write(w, string(literal))
 	} else {
-		write(w, string(addCustomClasses(literal)))
+		write(w, string(addCustomClasses(prefixLinesWithSpan(literal))))
 	}
 
 	write(w, "</code>")
@@ -141,4 +142,21 @@ func addCustomClasses(value []byte) []byte {
 	}
 
 	return escapedValue
+}
+
+func prefixLinesWithSpan(value []byte) []byte {
+	builder := bytes.NewBuffer([]byte{})
+
+	splits := bytes.Split(value, []byte("\n"))
+	splitsNo := len(splits) - 1
+
+	for i, v := range splits {
+		if i == splitsNo && bytes.Equal(v, []byte{}) {
+			continue
+		}
+
+		builder.Write([]byte(fmt.Sprintf("<span class=\"line-number\">%02d  </span>%v\n", i+1, string(v))))
+	}
+
+	return builder.Bytes()
 }

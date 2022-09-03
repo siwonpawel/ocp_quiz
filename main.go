@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	WEB_PORT = 5000
+	WEB_PORT = 5001
 
 	HOME_PAGE     = "homePage"
 	QUESTION_PAGE = "questionPage"

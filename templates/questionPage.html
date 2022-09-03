@@ -21,7 +21,7 @@
             <div class="my-2">
                 <ul class="list-group">
                     {{ range $i, $a := .Answers }}
-                        <li onclick="activate(this)" id="answer-{{ $i }}" class="user-select-none answer list-group-item {{ if $a.Correct}}correct{{ else }}incorrect{{ end }}">{{ $a.Statement }}</li>
+                        <li onclick="activate(this)" id="answer-{{ .Id }}" class="user-select-none answer list-group-item {{ if $a.Correct}}correct{{ else }}incorrect{{ end }}">{{ $a.Statement }}</li>
                     {{ end }}
                 </ul>
             </div>
@@ -33,13 +33,17 @@
             </div>
     
             <div class="row justify-content-end">
-                <div class="col col-xs-12 col-md-6 col-lg-4 py-2 ">
-                    <div class="btn-group d-flex" role="group">
+                <div class="col col-xs-12 col-md-6 col-lg-4 py-2">
+                    <div id="verify-btns" class="btn-group d-flex" role="group">
                         <button type="button" id="btn-verify" class="btn btn-warning shadow-none" onclick="verify()">Verify answers</button>
+                    </div>
+                    <div id="next-question-btns" class="btn-group d-flex d-none" role="group">
                         <a href="/question/{{ .NextQuestionId }}" class="btn btn-primary" role="button" aria-pressed="true">Next question</a>
                     </div>
                 </div>
             </div>
+
+
 
         {{ end }}    
     </div>
