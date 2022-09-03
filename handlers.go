@@ -13,8 +13,11 @@ import (
 func handlers() *mux.Router {
 	mux := mux.NewRouter()
 
-	fs := http.FileServer(http.FS(staticContent))
-	mux.PathPrefix("/static/").Handler(fs)
+	staticContentFS := http.FileServer(http.FS(staticContent))
+	mux.PathPrefix("/static/").Handler(staticContentFS)
+
+	faviconFS := http.FileServer(http.FS(favicon))
+	mux.Path("/favicon.ico").Handler(faviconFS)
 
 	mux.HandleFunc("/", mainPageHandler)
 	mux.HandleFunc("/question/{id}", questionPageHandler)

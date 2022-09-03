@@ -17,6 +17,9 @@ var staticContent embed.FS
 //go:embed templates/*
 var content embed.FS
 
+//go:embed favicon.ico
+var favicon embed.FS
+
 const (
 	HOME_PAGE     = "homePage"
 	QUESTION_PAGE = "questionPage"
@@ -37,8 +40,6 @@ func main() {
 		log.Println(err)
 	}
 }
-
-
 
 func loadTemplates() map[string]*template.Template {
 	return map[string]*template.Template{
