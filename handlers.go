@@ -28,6 +28,7 @@ func handlers() *mux.Router {
 }
 
 func mainPageHandler(w http.ResponseWriter, r *http.Request) {
+	log.Println("Requested main page")
 	id, err := getRandomId(0)
 	if err != nil {
 		log.Printf("error fetching next questionId: %s", err)
@@ -47,6 +48,7 @@ func questionPageHandler(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("Error " + err.Error()))
 		return
 	}
+	log.Printf("Requested question [ id = %d ].\n", questionId)
 
 	question, err := getReviewedQuestionById(questionId)
 	if err != nil {
