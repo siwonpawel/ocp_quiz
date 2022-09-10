@@ -18,4 +18,4 @@ start: container
 	printf "Starting container... \n"
 	podman rm -f ocp_quiz || echo "Nothing to clean..."
 	podman run -e WEB_PORT="${WEB_PORT}" -e DB_CONN="${DB_CONN}" -p ${WEB_PORT}:${WEB_PORT} -d --name ocp_quiz ocp_quiz:latest >> /dev/null
-	printf "Started..."
+	printf "Started...\n"
