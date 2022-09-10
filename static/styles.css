@@ -10,3 +10,19 @@ li pre {
     margin: 0 auto;
     padding: 2vh 2vw;
 }
+
+.line-number {
+    color: green;
+}
+
+.cb-access-modifier, .cb-type, .cb-type-name, .cb-method, .line-number {
+    font-weight: bold;
+}
+
+.cb-method {
+    color: rgb(77, 77, 255);
+}
+
+.cb-access-modifier, .cb-type {
+    color: rgb(88, 179, 88);
+}
