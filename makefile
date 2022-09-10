@@ -3,7 +3,6 @@
 clear:
 	printf "Cleaning existing builds.\n"
 	rm -rf build >> /dev/null
-	podman rmi -f ocp_quiz:latest >> /dev/null || echo "Nothing to clean..."
 
 build: clear
 	printf "Fetching dependencies...\n"
@@ -17,4 +16,6 @@ container: build
 
 start: container
 	printf "Starting container... \n"
-	podman run -e WEB_PORT="${WEB_PORT}" -e DB_CONN="${DB_CONN}" -p ${WEB_PORT}:${WEB_PORT} -d ocp_quiz:latest >> /dev/null
+	podman rm -f ocp_quiz || echo "Nothing to clean..."
+	podman run -e WEB_PORT="${WEB_PORT}" -e DB_CONN="${DB_CONN}" -p ${WEB_PORT}:${WEB_PORT} -d --name ocp_quiz ocp_quiz:latest >> /dev/null
+	printf "Started..."
