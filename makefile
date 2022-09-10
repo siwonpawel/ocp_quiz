@@ -3,7 +3,7 @@
 clear:
 	printf "Cleaning existing builds.\n"
 	rm -rf build >> /dev/null
-	podman rmi -f ocp_quiz:latest >> /dev/null
+	podman rmi -f ocp_quiz:latest >> /dev/null || echo "Nothing to clean..."
 
 build: clear
 	printf "Fetching dependencies...\n"
