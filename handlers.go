@@ -107,22 +107,19 @@ func unreviewedQuestionPageHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	nextQuestionId, err := getRandomId(r.Context(), questionId)
-	if err != nil {
-		log.Printf("error fetching next questionId: %s", err)
-	}
-
 	problemStatementHtml := ParseString(unescapeWhiteCharacters(question.ProblemStatement))
+	explanationHtml := ParseString(unescapeWhiteCharacters(question.Explanation))
 
 	err = templates[QUESTION_PAGE].Execute(w, QuestionResponse{
-		NextQuestion:     NextQuestion{nextQuestionId},
+		NextQuestion:     NextQuestion{questionId},
 		Id:               question.Id,
 		ProblemStatement: template.HTML(problemStatementHtml),
-		Explanation:      template.HTML(question.Explanation),
+		Explanation:      template.HTML(explanationHtml),
 		Toughness:        question.Toughness,
 		Type:             question.Type,
 		Answers:          mapAnswers(question.Answers),
 	})
+
 	if err != nil {
 		log.Println(err)
 	}

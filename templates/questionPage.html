@@ -14,10 +14,21 @@
                 {{ .ProblemStatement }}
             </div>
         </div>
-        {{ if .Answers }}
-            <div class="row my-2">
-                <p class="my-0">Answers:</p>
+        {{ if .Explanation }}
+            <div class="row justify-content-end">
+                <div class="col col-xs-12 col-md-6 col-lg-4 py-2">
+                    <div id="question-explanation-btns" class="btn-group d-flex" role="group">
+                        <button class="btn btn-primary shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                            Show question comment
+                        </button>
+                    </div>
+                </div>
             </div>
+            <div class="collapse" id="collapseExample">
+                <div class="card card-body">{{ .Explanation }}</div>
+            </div>
+        {{ end }}
+        {{ if .Answers }}
             <div class="my-2">
                 <ul class="list-group">
                     {{ range $i, $a := .Answers }}
@@ -43,21 +54,6 @@
                 </div>
             </div>
 
-        {{ end }}
-
-        {{ if .Explanation }}
-            <div class="row justify-content-end">
-                <div class="col col-xs-12 col-md-6 col-lg-4 py-2">
-                    <div id="question-explanation-btns" class="btn-group d-flex" role="group">
-                        <button class="btn btn-primary shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-                            Show explanation
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div class="collapse" id="collapseExample">
-                <div class="card card-body">{{ .Explanation }}</div>
-            </div>
         {{ end }}
     </div>
 </main>
