@@ -10,33 +10,40 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/jackc/pgx/v4"
+	"github.com/jackc/pgx/v4/pgxpool"
 )
 
-var dbConn *pgx.Conn = connect()
+var dbConn *pgxpool.Pool = createDBPool()
 
-func connect() *pgx.Conn {
+func createDBPool() *pgxpool.Pool {
+	connConfig, err := pgxpool.ParseConfig(os.Getenv("DB_CONN"))
+	if err != nil {
+		log.Panic("Error parsing configuration", err)
+	}
+
 	ctx, c := context.WithTimeout(context.Background(), time.Duration(500*time.Millisecond))
 
-	conn, err := pgx.Connect(ctx, os.Getenv("DB_CONN"))
+	pool, err := pgxpool.ConnectConfig(ctx, connConfig)
 	c()
 	if err != nil {
-		log.Panic(err)
+		log.Panic("Cannot establish connection to database: ", err)
 	}
 
 	ctx2, c := context.WithTimeout(context.Background(), time.Duration(5*time.Second))
-	defer c()
-	if err := conn.Ping(ctx2); err != nil {
+	if err := pool.Ping(ctx2); err != nil {
 		log.Panic(fmt.Errorf("cant ping database: %s", err))
 	}
+	c()
 
-	return conn
+	return pool
 }
 
 func getRandomId(ctx context.Context, except int) (int, error) {
 	timeoutContext, c := context.WithTimeout(ctx, time.Duration(500*time.Millisecond))
 
-	result, err := dbConn.Query(timeoutContext, `SELECT id FROM question WHERE reviewed IS NOT NULL AND id != $1 ORDER BY random() LIMIT 1`, except)
+	vv := dbConn
+
+	result, err := vv.Query(timeoutContext, `SELECT id FROM question WHERE reviewed IS NOT NULL AND id != $1 ORDER BY random() LIMIT 1`, except)
 	c()
 	if err != nil {
 		return 0, err
