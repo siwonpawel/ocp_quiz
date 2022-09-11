@@ -19,12 +19,26 @@ func handlers() *mux.Router {
 	faviconFS := http.FileServer(http.FS(favicon))
 	mux.Path("/favicon.ico").Handler(faviconFS)
 
+	mux.HandleFunc("/health", healthCheck)
 	mux.HandleFunc("/", mainPageHandler)
 	mux.HandleFunc("/question/{id}", questionPageHandler)
 
 	mux.HandleFunc("/question/unreviewed/{id}", unreviewedQuestionPageHandler)
 
 	return mux
+}
+
+func healthCheck(w http.ResponseWriter, r *http.Request) {
+	_, err := getRandomId(0)
+	if err != nil {
+		log.Println("Health check: FAIL")
+		w.WriteHeader(503)
+		w.Write([]byte("FAIL"))
+	} else {
+		log.Println("Health check: OK")
+		w.WriteHeader(200)
+		w.Write([]byte("OK"))
+	}
 }
 
 func mainPageHandler(w http.ResponseWriter, r *http.Request) {

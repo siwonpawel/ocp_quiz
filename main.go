@@ -7,8 +7,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-
-	_ "embed"
 )
 
 //go:embed static/*
