@@ -29,7 +29,7 @@ func handlers() *mux.Router {
 }
 
 func healthCheck(w http.ResponseWriter, r *http.Request) {
-	_, err := getRandomId(0)
+	_, err := getRandomId(r.Context(), 0)
 	if err != nil {
 		log.Println("Health check: FAIL")
 		w.WriteHeader(503)
@@ -43,7 +43,7 @@ func healthCheck(w http.ResponseWriter, r *http.Request) {
 
 func mainPageHandler(w http.ResponseWriter, r *http.Request) {
 	log.Println("Requested main page")
-	id, err := getRandomId(0)
+	id, err := getRandomId(r.Context(), 0)
 	if err != nil {
 		log.Printf("error fetching next questionId: %s", err)
 	}
@@ -64,13 +64,13 @@ func questionPageHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	log.Printf("Requested question [ id = %d ].\n", questionId)
 
-	question, err := getReviewedQuestionById(questionId)
+	question, err := getReviewedQuestionById(r.Context(), questionId)
 	if err != nil {
 		w.Write([]byte("Error " + err.Error()))
 		return
 	}
 
-	nextQuestionId, err := getRandomId(questionId)
+	nextQuestionId, err := getRandomId(r.Context(), questionId)
 	if err != nil {
 		log.Printf("error fetching next questionId: %s", err)
 	}
@@ -100,13 +100,13 @@ func unreviewedQuestionPageHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	question, err := getAnyQuestionById(questionId)
+	question, err := getAnyQuestionById(r.Context(), questionId)
 	if err != nil {
 		w.Write([]byte("Error " + err.Error()))
 		return
 	}
 
-	nextQuestionId, err := getRandomId(questionId)
+	nextQuestionId, err := getRandomId(r.Context(), questionId)
 	if err != nil {
 		log.Printf("error fetching next questionId: %s", err)
 	}

@@ -33,10 +33,10 @@ func connect() *pgx.Conn {
 	return conn
 }
 
-func getRandomId(except int) (int, error) {
-	ctx, c := context.WithTimeout(context.Background(), time.Duration(500*time.Millisecond))
+func getRandomId(ctx context.Context, except int) (int, error) {
+	timeoutContext, c := context.WithTimeout(ctx, time.Duration(500*time.Millisecond))
 
-	result, err := dbConn.Query(ctx, `SELECT id FROM question WHERE reviewed IS NOT NULL AND id != $1 ORDER BY random() LIMIT 1`, except)
+	result, err := dbConn.Query(timeoutContext, `SELECT id FROM question WHERE reviewed IS NOT NULL AND id != $1 ORDER BY random() LIMIT 1`, except)
 	c()
 	if err != nil {
 		return 0, err
@@ -56,18 +56,18 @@ func getRandomId(except int) (int, error) {
 	return 0, errors.New("can't fetch number of questions")
 }
 
-func getReviewedQuestionById(questionId int) (*Question, error) {
-	return queryQuestion(questionId, `SELECT id, explanation, problem_statement, toughness, type FROM question WHERE id = $1 AND reviewed IS NOT NULL`, questionId)
+func getReviewedQuestionById(ctx context.Context, questionId int) (*Question, error) {
+	return queryQuestion(ctx, questionId, `SELECT id, explanation, problem_statement, toughness, type FROM question WHERE id = $1 AND reviewed IS NOT NULL`, questionId)
 }
 
-func getAnyQuestionById(questionId int) (*Question, error) {
-	return queryQuestion(questionId, `SELECT id, explanation, problem_statement, toughness, type FROM question WHERE id = $1`, questionId)
+func getAnyQuestionById(ctx context.Context, questionId int) (*Question, error) {
+	return queryQuestion(ctx, questionId, `SELECT id, explanation, problem_statement, toughness, type FROM question WHERE id = $1`, questionId)
 }
 
-func queryQuestion(questionId int, query string, data ...any) (*Question, error) {
-	ctx, c := context.WithTimeout(context.Background(), time.Duration(500*time.Millisecond))
+func queryQuestion(ctx context.Context, questionId int, query string, data ...any) (*Question, error) {
+	timeoutContext, c := context.WithTimeout(ctx, time.Duration(500*time.Millisecond))
 
-	result, err := dbConn.Query(ctx, query, data...)
+	result, err := dbConn.Query(timeoutContext, query, data...)
 	c()
 	if err != nil {
 		return &Question{}, err
@@ -86,7 +86,7 @@ func queryQuestion(questionId int, query string, data ...any) (*Question, error)
 			return nil, err
 		}
 
-		ans, err := getAnswers(questionId)
+		ans, err := getAnswers(ctx, questionId)
 		if err != nil {
 			return &Question{}, err
 		}
@@ -104,10 +104,10 @@ func queryQuestion(questionId int, query string, data ...any) (*Question, error)
 	}
 }
 
-func getAnswers(questionId int) ([]Answer, error) {
-	ctx, c := context.WithTimeout(context.Background(), time.Duration(500*time.Millisecond))
+func getAnswers(ctx context.Context, questionId int) ([]Answer, error) {
+	timeoutContext, c := context.WithTimeout(ctx, time.Duration(500*time.Millisecond))
 
-	result, err := dbConn.Query(ctx, "SELECT id, correct, short_comment, statement FROM answer WHERE question_id = $1", questionId)
+	result, err := dbConn.Query(timeoutContext, "SELECT id, correct, short_comment, statement FROM answer WHERE question_id = $1", questionId)
 	c()
 
 	if err != nil {
