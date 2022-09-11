@@ -43,9 +43,22 @@
                 </div>
             </div>
 
+        {{ end }}
 
-
-        {{ end }}    
+        {{ if .Explanation }}
+            <div class="row justify-content-end">
+                <div class="col col-xs-12 col-md-6 col-lg-4 py-2">
+                    <div id="question-explanation-btns" class="btn-group d-flex" role="group">
+                        <button class="btn btn-primary shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                            Show explanation
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="collapse" id="collapseExample">
+                <div class="card card-body">{{ .Explanation }}</div>
+            </div>
+        {{ end }}
     </div>
 </main>
 

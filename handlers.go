@@ -76,12 +76,13 @@ func questionPageHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	problemStatementHtml := ParseString(unescapeWhiteCharacters(question.ProblemStatement))
+	explanationHtml := ParseString(unescapeWhiteCharacters(question.Explanation))
 
 	err = templates[QUESTION_PAGE].Execute(w, QuestionResponse{
 		NextQuestion:     NextQuestion{nextQuestionId},
 		Id:               question.Id,
 		ProblemStatement: template.HTML(problemStatementHtml),
-		Explanation:      template.HTML(question.Explanation),
+		Explanation:      template.HTML(explanationHtml),
 		Toughness:        question.Toughness,
 		Type:             question.Type,
 		Answers:          mapAnswers(question.Answers),
